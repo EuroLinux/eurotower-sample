@@ -1,0 +1,42 @@
+---
+# Author: Lucio Afonso
+# Company: EuroLinux
+
+- hosts: all
+  name: EuroTower test
+  connection: local
+  become: true # perform this play as root
+  become_user: root
+  vars:
+    product: "EuroTower"
+
+  tasks:
+    - name: Ping pong
+      ping:
+
+    - name: Update system packages
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Download system packages
+      yum:
+        name: "{{ item }}"
+        state: latest
+        download_only: true
+      loop:
+        - vim
+        - git
+        - nginx
+
+    - name: Ensuring that wheel is able to use sudo without password
+      lineinfile:
+        path: /etc/sudoers
+        regexp: "^%wheel"
+        line: "%wheel ALL=(ALL) NOPASSWD: ALL"
+        validate: "visudo -cf %s"
+
+    - name: Print welcome to product
+      debug:
+        msg: "Welcome to {{ product }}!"
+...
