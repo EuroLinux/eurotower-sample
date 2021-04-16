@@ -5,9 +5,8 @@
 - hosts: all
   name: EuroTower test
   connection: local
-  become: true # perform this play as root
-  become_user: root
-  gather_facts: false
+  # become: true # perform this play as root
+  # become_user: root
   vars:
     product: "EuroTower"
 
